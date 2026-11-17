@@ -50,6 +50,32 @@ const windowMat=new T.MeshStandardMaterial({color:'#4e7393',emissive:'#1b405c',e
 const star=new T.Group();star.position.set(.7,3.35,-1.61);house.add(star);mesh(new T.OctahedronGeometry(.23),mats.glow,0,0,0,star);mesh(new T.SphereGeometry(.38,12,8),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,0,0,star);register('dream',star);
 function table(x,z){cyl(.68,.68,.12,mats.floor,x,1.94,z);cyl(.07,.09,.72,mats.trim,x,1.56,z);cyl(.4,.45,.07,mats.black,x,1.24,z);}
 table(-1.3,.5);table(1.25,.7);
+// Gothic chairs: carved wood, velvet seats and pointed arch backs.
+function chair(x,z,rotation){
+ const group=new T.Group();group.position.set(x,1.24,z);group.rotation.y=rotation;house.add(group);
+ box(.64,.1,.63,mats.floor,0,.4,0,group);
+ box(.57,.09,.55,mats.burgundy,0,.49,.015,group);
+ for(const legX of [-.25,.25])for(const legZ of [-.24,.24]){
+  cyl(.035,.05,.38,mats.dark,legX,.19,legZ,group,8);
+  cyl(.055,.055,.045,mats.trim,legX,.045,legZ,group,8);
+ }
+ for(const legX of [-.27,.27]){
+  beam([legX,.45,-.25],[legX,1.18,-.25],.035,mats.floor,group);
+  mesh(new T.OctahedronGeometry(.055),mats.trim,legX,1.24,-.25,group);
+ }
+ const back=new T.Shape();back.moveTo(-.22,.55);back.lineTo(-.22,1.07);
+ back.quadraticCurveTo(-.22,1.28,0,1.43);back.quadraticCurveTo(.22,1.28,.22,1.07);
+ back.lineTo(.22,.55);back.closePath();
+ const velvet=mats.burgundy.clone();velvet.side=T.DoubleSide;
+ mesh(new T.ShapeGeometry(back),velvet,0,0,-.265,group);
+ const outline=back.getPoints(18).map(p=>new T.Vector3(p.x,p.y,-.23));
+ group.add(new T.Line(new T.BufferGeometry().setFromPoints(outline),new T.LineBasicMaterial({color:'#c3a16b'})));
+ mesh(new T.OctahedronGeometry(.065),mats.trim,0,.99,-.22,group);
+ beam([-.25,.2,-.24],[.25,.2,-.24],.02,mats.floor,group);
+ return group;
+}
+chair(-2.3,.5,Math.PI/2);chair(-1.3,-.55,0);
+chair(2.25,.7,-Math.PI/2);chair(1.25,-.35,0);
 const book=new T.Group();book.position.set(-1.3,2.06,.5);book.rotation.y=-.3;house.add(book);box(.7,.075,.5,mats.paper,0,0,0,book);box(.76,.03,.56,mats.burgundy,0,-.05,0,book);const cover=box(.76,.03,.56,mats.burgundy,0,.05,0,book);box(.4,.012,.025,mats.trim,0,.072,0,book);register('book',book);
 const cup=new T.Group();cup.position.set(1.25,2.03,.7);house.add(cup);cyl(.3,.3,.035,mats.white,0,0,0,cup);const cupGeo=new T.CylinderGeometry(.19,.13,.3,24,1,true);mesh(cupGeo,new T.MeshStandardMaterial({color:'#dfd1b6',side:T.DoubleSide,roughness:.25}),0,.18,0,cup);cyl(.165,.165,.012,new T.MeshStandardMaterial({color:'#39231b',roughness:.2}),0,.3,0,cup);torus(.19,.018,mats.trim,0,.33,0,cup).rotation.x=Math.PI/2;torus(.12,.035,mats.white,.22,.19,0,cup);mesh(new T.SphereGeometry(.36,12,8),new T.MeshBasicMaterial({transparent:true,opacity:0,depthWrite:false}),0,.2,0,cup);register('coffee',cup);
 const steam=[];for(let i=0;i<8;i++){const m=mesh(new T.SphereGeometry(.025,6,5),new T.MeshBasicMaterial({color:'#dccbad',transparent:true,opacity:.3}),1.25,2.5,.7);steam.push(m);}
